@@ -21,7 +21,7 @@ jobs:
         run: yarn
 
       - name: Generate docs
-        run: npx --yes typedoc --out ../ --excludePrivate --excludeInternal src/index.ts
+        run: npx --yes typedoc --out ../docs --excludePrivate --excludeInternal src/index.ts
 
       - uses: actions/checkout@v2
         with:
