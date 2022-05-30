@@ -1,0 +1,37 @@
+name: Generate docs
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate docs
+        run: npx --yes typedoc --out ../ --excludePrivate --excludeInternal src/index.ts
+
+      - uses: actions/checkout@v2
+        with:
+          ref: docs
+
+      - name: Move docs folder back
+        run: mv -f ../docs .
+
+      - name: Commit docs
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update docs
+          branch: docs
