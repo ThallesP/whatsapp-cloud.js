@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 
 import { IAuthOptions } from "../@types";
 import { Client } from "../client/client";
+import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
 
 /**
  * Manages API methods for messages
@@ -23,6 +24,8 @@ export class MessageManager {
       },
       baseURL: `https://graph.facebook.com/v13.0/${phoneNumberID}`,
     });
+
+    this.request.interceptors.response.use((res) => res, AxiosErrorInterceptor);
   }
 
   /**
