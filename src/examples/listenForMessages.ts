@@ -10,7 +10,9 @@ const client = new Client({
 });
 
 client.on("message", (message) => {
-  console.log(message);
+  console.log(`new message`, message);
 });
 
-client.initializeWebhook(3000);
+client.initializeWebhook(3000).then(() => {
+  console.log("I'm ready!!");
+});

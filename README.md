@@ -6,6 +6,6 @@ SOON
 
 # 📋 TODO
 [x] - Ability to send text messages  
-[] - Finish HTTP server to receive Whatsapp events  
+[x] - Finish HTTP server to receive Whatsapp events  
 [] - Ability to send reply buttons  
 [] - Ability to send document messages

@@ -20,7 +20,7 @@ export class Client extends TypedEmitter<IClientEvents> {
       accessToken: this.accessToken,
     });
 
-    this.webhook = new Webhook();
+    this.webhook = new Webhook(this);
   }
 
   messages: MessageManager;
