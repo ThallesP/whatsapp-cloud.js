@@ -28,7 +28,7 @@ jobs:
           ref: docs
 
       - name: Move docs folder back
-        run: mv -f ../docs .
+        run: rm -rf ./docs && mv ../docs/ .
 
       - name: Commit docs
         uses: stefanzweifel/git-auto-commit-action@v4
