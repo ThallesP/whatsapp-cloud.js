@@ -12,3 +12,39 @@ export interface IClientOptions {
 export interface IClientEvents {
   message: (message: Message) => void;
 }
+
+export interface IWebhookData<T> {
+  object: string;
+  entry: {
+    id: string;
+    changes: {
+      field: string;
+      value: T;
+    }[];
+  }[];
+}
+
+export interface IWebhookMessage {
+  from: string;
+  id: string;
+  timestamp: string;
+  type: string;
+  text: {
+    body: string;
+  };
+}
+
+export interface IWebhookMessageData {
+  messaging_product: string;
+  metadata: {
+    display_phone_number: string;
+    phone_number_id: string;
+  };
+  contacts: {
+    profile: {
+      name: string;
+    };
+    wa_id: string;
+  }[];
+  messages: IWebhookMessage[];
+}
