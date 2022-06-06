@@ -3,6 +3,8 @@ Whatsapp Cloud JS is a library to allows you to interact with Whatsapp's Cloud A
 
 # 🚀 Getting started
 ```ts
+import { Client } from 'whatsapp-cloud.js'
+
 const client = new Client({
   auth: {
     accessToken: process.env.ACCESS_TOKEN,
