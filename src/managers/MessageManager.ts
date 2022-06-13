@@ -4,6 +4,36 @@ import { IAuthOptions } from "../@types";
 import { Client } from "../client/client";
 import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
 
+interface IComponent {
+  type: string;
+  index: number;
+  text: string;
+}
+
+interface ISendTemplateMessage {
+  /*
+   * The number that this template will be sent
+   * */
+  to: string;
+
+  /*
+   * The template language
+   *
+   * default: en_US
+   * */
+  language?: string;
+
+  /*
+   * The template name
+   * */
+  templateName: string;
+
+  /*
+   * The variables that will be replaced in the message
+   * */
+  variables: IComponent[];
+}
+
 /**
  * Manages API methods for messages
  */
@@ -37,6 +67,28 @@ export class MessageManager {
       to,
       text: {
         body: text,
+      },
+    });
+  }
+
+  async sendTemplateMessage({
+    to,
+    templateName,
+    variables,
+    language = "en_US",
+  }: ISendTemplateMessage) {
+    await this.request.post("/messages", {
+      messaging_product: "whatsapp",
+      to,
+      template: {
+        name: templateName,
+        language,
+        components: [
+          {
+            type: "body",
+            parameters: [...variables],
+          },
+        ],
       },
     });
   }

@@ -9,10 +9,21 @@ const client = new Client({
   },
 });
 
+interface ITemplate {
+  helloWorld: string;
+}
+
 (async () => {
   await client.messages.sendTextMessage(
     "Hello, world",
     process.env.DESTINATION_PHONE_NUMBER || ""
+  );
+
+  await client.messages.sendTemplateMessage<ITemplate>(
+    "sample_flight_confirmation",
+    {
+      helloWorld: "hello",
+    }
   );
 
   await client.initializeWebhook(3000);
