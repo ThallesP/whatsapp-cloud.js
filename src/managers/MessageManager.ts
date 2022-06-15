@@ -31,7 +31,7 @@ interface ISendTemplateMessage {
   /*
    * The variables that will be replaced in the message
    * */
-  variables: IComponent[];
+  variables?: IComponent[];
 }
 
 /**
@@ -77,18 +77,26 @@ export class MessageManager {
     variables,
     language = "en_US",
   }: ISendTemplateMessage) {
+    let components;
+    if (variables) {
+      components = [
+        {
+          type: "body",
+          parameters: [...variables],
+        },
+      ];
+    }
+
     await this.request.post("/messages", {
       messaging_product: "whatsapp",
       to,
+      type: "template",
       template: {
         name: templateName,
-        language,
-        components: [
-          {
-            type: "body",
-            parameters: [...variables],
-          },
-        ],
+        language: {
+          code: language,
+        },
+        ...(components && { components }),
       },
     });
   }

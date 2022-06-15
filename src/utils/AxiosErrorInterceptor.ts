@@ -21,7 +21,7 @@ export function AxiosErrorInterceptor(
     return Promise.reject(
       new WhatsappAPIError(
         whatsappError.code,
-        whatsappError.error_data.details,
+        whatsappError.message,
         whatsappError
       )
     );
