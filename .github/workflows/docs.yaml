@@ -1,4 +1,5 @@
 name: Generate docs
+concurrency: docs
 on:
   push:
     branches:
