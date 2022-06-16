@@ -10,35 +10,35 @@ import {
 import { Client } from "../client/client";
 import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
 
-interface ISendTemplateMessage {
-  /*
-   * The number that this template will be sent
-   */
+export interface ISendTemplateMessageOptions {
+  /** The number that this template will be sent */
   to: string;
 
-  /*
+  /**
    * The template language
    *
    * default: en_US
    */
   language?: string;
 
-  /*
+  /**
    * The template name
    */
   templateName: string;
 
-  /*
+  /**
    * The template components for the body of the message.
-   * They'll be replaced by the variables in your template.
+   *
+   * The components will be replaced by the variables in your template.
    *
    * Example:
    * Here's your one time password {{1}} // "1" will be replaced by the component specified
    * */
   bodyComponents?: IBodyComponents;
 
-  /*
+  /**
    * The template components for the header of the message.
+   *
    * They'll be replaced by the variables in your template.
    *
    * Example:
@@ -46,8 +46,9 @@ interface ISendTemplateMessage {
    * */
   headerComponents?: IHeaderComponents;
 
-  /*
+  /**
    * The template components for the button of the message.
+   *
    * They'll be replaced by the variables in your template.
    *
    * Example:
@@ -93,6 +94,9 @@ export class MessageManager {
     });
   }
 
+  /**
+   * Sends template message to a specific number
+   */
   async sendTemplateMessage({
     to,
     templateName,
@@ -100,7 +104,7 @@ export class MessageManager {
     buttonComponents,
     headerComponents,
     language = "en_US",
-  }: ISendTemplateMessage) {
+  }: ISendTemplateMessageOptions) {
     const components = [];
 
     const convertToAPIComponent = (component: IComponent) => {
