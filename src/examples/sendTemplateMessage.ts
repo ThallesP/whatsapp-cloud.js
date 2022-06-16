@@ -12,13 +12,11 @@ const client = new Client({
 (async () => {
   await client.messages.sendTemplateMessage({
     to: process.env.DST_NUMBER || "",
-    templateName: "password_test",
+    templateName: "welcome_message",
     bodyComponents: [
       {
-        type: "currency",
-        code: "USD",
-        amount_1000: 1000,
-        fallback_value: "1 dollar",
+        type: "text",
+        text: "Sr. Brega",
       },
     ],
   });
