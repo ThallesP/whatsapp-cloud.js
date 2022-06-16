@@ -48,3 +48,34 @@ export interface IWebhookMessageData {
   }[];
   messages: IWebhookMessage[];
 }
+
+export interface ITextComponent {
+  type: "text";
+  text: string;
+}
+
+export interface ICurrencyComponent {
+  type: "currency";
+  fallback_value: string;
+  code: string;
+  amount_1000: number;
+}
+
+export interface IDateTimeComponent {
+  type: "date_time";
+  fallback_value: Date | string;
+}
+
+export type IComponent =
+  | ITextComponent
+  | ICurrencyComponent
+  | IDateTimeComponent;
+
+export type IBodyComponents =
+  | ITextComponent[]
+  | ICurrencyComponent[]
+  | IDateTimeComponent[];
+
+export type IHeaderComponents = ICurrencyComponent[] | IDateTimeComponent[];
+
+export type IButtonComponents = ICurrencyComponent[] | IDateTimeComponent[];

@@ -1,37 +1,59 @@
 import axios, { AxiosInstance } from "axios";
 
-import { IAuthOptions } from "../@types";
+import {
+  IAuthOptions,
+  IBodyComponents,
+  IButtonComponents,
+  IComponent,
+  IHeaderComponents,
+} from "../@types";
 import { Client } from "../client/client";
 import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
-
-interface IComponent {
-  type: string;
-  index: number;
-  text: string;
-}
 
 interface ISendTemplateMessage {
   /*
    * The number that this template will be sent
-   * */
+   */
   to: string;
 
   /*
    * The template language
    *
    * default: en_US
-   * */
+   */
   language?: string;
 
   /*
    * The template name
-   * */
+   */
   templateName: string;
 
   /*
-   * The variables that will be replaced in the message
+   * The template components for the body of the message.
+   * They'll be replaced by the variables in your template.
+   *
+   * Example:
+   * Here's your one time password {{1}} // "1" will be replaced by the component specified
    * */
-  variables?: IComponent[];
+  bodyComponents?: IBodyComponents;
+
+  /*
+   * The template components for the header of the message.
+   * They'll be replaced by the variables in your template.
+   *
+   * Example:
+   * Thanks for choosing us {{1}}. // "1" will be replaced by the component specified
+   * */
+  headerComponents?: IHeaderComponents;
+
+  /*
+   * The template components for the button of the message.
+   * They'll be replaced by the variables in your template.
+   *
+   * Example:
+   * Click here to buy {{1}}. // "1" will be replaced by the component specified
+   * */
+  buttonComponents?: IButtonComponents;
 }
 
 /**
@@ -74,17 +96,60 @@ export class MessageManager {
   async sendTemplateMessage({
     to,
     templateName,
-    variables,
+    bodyComponents,
+    buttonComponents,
+    headerComponents,
     language = "en_US",
   }: ISendTemplateMessage) {
-    let components;
-    if (variables) {
-      components = [
-        {
-          type: "body",
-          parameters: [...variables],
-        },
-      ];
+    const components = [];
+
+    const convertToAPIComponent = (component: IComponent) => {
+      if (component.type === "currency") {
+        const { code, amount_1000, fallback_value } = component;
+        return {
+          type: "currency",
+          currency: { code, fallback_value, amount_1000 },
+        };
+      }
+
+      if (component.type === "date_time") {
+        const { fallback_value } = component;
+        return {
+          type: "date_time",
+          date_time: {
+            fallback_value,
+          },
+        };
+      }
+
+      return component;
+    };
+
+    if (bodyComponents) {
+      components.push({
+        type: "body",
+        parameters: bodyComponents.map((component) =>
+          convertToAPIComponent(component)
+        ),
+      });
+    }
+
+    if (buttonComponents) {
+      components.push({
+        type: "button",
+        parameters: buttonComponents.map((component) =>
+          convertToAPIComponent(component)
+        ),
+      });
+    }
+
+    if (headerComponents) {
+      components.push({
+        type: "header",
+        parameters: headerComponents.map((component) =>
+          convertToAPIComponent(component)
+        ),
+      });
     }
 
     await this.request.post("/messages", {
@@ -96,7 +161,7 @@ export class MessageManager {
         language: {
           code: language,
         },
-        ...(components && { components }),
+        components,
       },
     });
   }
