@@ -1,6 +1,6 @@
-// import "dotenv/config";
+import "dotenv/config";
 
-import { Client } from "../index";
+import { Client } from "../src";
 
 const client = new Client({
   auth: {

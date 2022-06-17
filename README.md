@@ -24,8 +24,13 @@ client.initializeWebhook(3000).then(() => {
 });
 ```
 
+# 💡 Documentation
+You can find the documentation at https://thallesp.github.io/whatsapp-cloud.js (docs in beta).  
+You can find examples at the [examples folder](examples).
+
 # 📋 TODO
 [x] - Ability to send text messages  
 [x] - Finish HTTP server to receive Whatsapp events  
+[x] - Ability to send template messages
 [] - Ability to send reply buttons  
 [] - Ability to send document messages
