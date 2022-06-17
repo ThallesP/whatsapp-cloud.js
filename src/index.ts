@@ -1,4 +1,3 @@
-import * as types from "./@types/index";
 import { Client } from "./client/client";
 import {
   MessageManager,
@@ -16,4 +15,4 @@ export { Message };
 
 // Interfaces
 export { ISendTemplateMessageOptions };
-export { types };
+export * from "./@types";
