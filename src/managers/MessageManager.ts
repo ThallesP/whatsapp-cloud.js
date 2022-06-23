@@ -7,7 +7,9 @@ import {
   IComponent,
   IHeaderComponents,
 } from "../@types";
+import { IAPIRawButtonsAction } from "../@types/api";
 import { Client } from "../client/client";
+import { ReplyButton } from "../components/ReplyButton";
 import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
 
 export interface ISendTemplateMessageOptions {
@@ -57,6 +59,27 @@ export interface ISendTemplateMessageOptions {
   buttonComponents?: IButtonComponents;
 }
 
+export interface IBaseSendInteractiveMessage {
+  type: "button" | "list";
+  to: string;
+  body: {
+    text: string;
+  };
+}
+
+export interface ISendInteractiveButtonMessage
+  extends IBaseSendInteractiveMessage {
+  type: "button";
+  buttons: ReplyButton[];
+}
+
+export interface ISendInteractiveListMessage
+  extends IBaseSendInteractiveMessage {
+  type: "list";
+  to: string;
+  // TODO: Finish List message
+}
+
 /**
  * Manages API methods for messages
  */
@@ -75,7 +98,7 @@ export class MessageManager {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      baseURL: `https://graph.facebook.com/v13.0/${phoneNumberID}`,
+      baseURL: `https://graph.facebook.com/v14.0/${phoneNumberID}`,
     });
 
     this.request.interceptors.response.use((res) => res, AxiosErrorInterceptor);
@@ -90,6 +113,45 @@ export class MessageManager {
       to,
       text: {
         body: text,
+      },
+    });
+  }
+
+  async sendInteractiveMessage(
+    message: ISendInteractiveButtonMessage | ISendInteractiveListMessage
+  ): Promise<void> {
+    const { to, type, body } = message;
+    let buttonsAction: IAPIRawButtonsAction | undefined;
+
+    if (message.type === "button") {
+      buttonsAction = {
+        buttons: message.buttons.map((button) => button.toAPIObject()),
+      };
+    }
+
+    console.log({
+      messaging_product: "whatsapp",
+      to,
+      interactive: {
+        action:
+          type === "button"
+            ? buttonsAction
+            : undefined /* TODO: implement list */,
+        type,
+        body,
+      },
+    });
+    await this.request.post(`/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "interactive",
+      interactive: {
+        action:
+          type === "button"
+            ? buttonsAction
+            : undefined /* TODO: implement list */,
+        type,
+        body,
       },
     });
   }

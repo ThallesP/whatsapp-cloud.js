@@ -31,6 +31,7 @@ You can find examples at the [examples folder](examples).
 # 📋 TODO
 [x] - Ability to send text messages  
 [x] - Finish HTTP server to receive Whatsapp events  
-[x] - Ability to send template messages
-[] - Ability to send reply buttons  
+[x] - Ability to send template messages  
+[x] - Ability to send reply buttons  
+[] - Ability to send sections  
 [] - Ability to send document messages
