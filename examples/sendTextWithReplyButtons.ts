@@ -13,9 +13,7 @@ const client = new Client({
 (async () => {
   await client.messages.sendInteractiveMessage({
     type: "button",
-    body: {
-      text: "Hi!!",
-    },
+    text: "Hi!!",
     to: process.env.DST_NUMBER || "",
     buttons: [new ReplyButton().setId("hey-button").setTitle("Hey!!!")],
   });

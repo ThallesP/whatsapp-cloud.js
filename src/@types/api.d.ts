@@ -10,13 +10,15 @@ export interface IAPIRawButtonsAction {
   buttons: IAPIRawReplyButton[];
 }
 
+export interface IAPIRawSectionRow {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface IAPIRawSection {
   title: string;
-  rows: {
-    id: string;
-    title: string;
-    description: string;
-  }[];
+  rows: IAPIRawSectionRow[];
 }
 
 export interface IAPIRawListAction {

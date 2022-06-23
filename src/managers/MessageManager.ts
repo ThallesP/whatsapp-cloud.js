@@ -7,9 +7,10 @@ import {
   IComponent,
   IHeaderComponents,
 } from "../@types";
-import { IAPIRawButtonsAction } from "../@types/api";
+import { IAPIRawButtonsAction, IAPIRawListAction } from "../@types/api";
 import { Client } from "../client/client";
 import { ReplyButton } from "../components/ReplyButton";
+import { Section } from "../components/Section";
 import { AxiosErrorInterceptor } from "../utils/AxiosErrorInterceptor";
 
 export interface ISendTemplateMessageOptions {
@@ -62,9 +63,7 @@ export interface ISendTemplateMessageOptions {
 export interface IBaseSendInteractiveMessage {
   type: "button" | "list";
   to: string;
-  body: {
-    text: string;
-  };
+  text: string;
 }
 
 export interface ISendInteractiveButtonMessage
@@ -77,7 +76,8 @@ export interface ISendInteractiveListMessage
   extends IBaseSendInteractiveMessage {
   type: "list";
   to: string;
-  // TODO: Finish List message
+  buttonName: string;
+  sections: Section[];
 }
 
 /**
@@ -117,41 +117,34 @@ export class MessageManager {
     });
   }
 
+  /**
+   * Sends interactive message (buttons and lists)
+   * */
   async sendInteractiveMessage(
     message: ISendInteractiveButtonMessage | ISendInteractiveListMessage
   ): Promise<void> {
-    const { to, type, body } = message;
-    let buttonsAction: IAPIRawButtonsAction | undefined;
+    const { to, type, text } = message;
+    let action: IAPIRawButtonsAction | IAPIRawListAction | undefined;
 
     if (message.type === "button") {
-      buttonsAction = {
+      action = {
         buttons: message.buttons.map((button) => button.toAPIObject()),
+      };
+    } else if (message.type === "list") {
+      action = {
+        button: message.buttonName,
+        sections: message.sections.map((section) => section.toAPIObject()),
       };
     }
 
-    console.log({
-      messaging_product: "whatsapp",
-      to,
-      interactive: {
-        action:
-          type === "button"
-            ? buttonsAction
-            : undefined /* TODO: implement list */,
-        type,
-        body,
-      },
-    });
     await this.request.post(`/messages`, {
       messaging_product: "whatsapp",
       to,
       type: "interactive",
       interactive: {
-        action:
-          type === "button"
-            ? buttonsAction
-            : undefined /* TODO: implement list */,
+        action,
         type,
-        body,
+        body: { text },
       },
     });
   }
