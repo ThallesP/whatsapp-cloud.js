@@ -58,6 +58,8 @@ export interface ISendTemplateMessageOptions {
    * Click here to buy {{1}}. // "1" will be replaced by the component specified
    * */
   buttonComponents?: IButtonComponents;
+
+  // components: any[]; TODO: work on this later
 }
 
 export interface IBaseSendInteractiveMessage {
@@ -158,19 +160,12 @@ export class MessageManager {
     bodyComponents,
     buttonComponents,
     headerComponents,
+    // components,
     language = "en_US",
   }: ISendTemplateMessageOptions) {
     const components = [];
 
     const convertToAPIComponent = (component: IComponent) => {
-      if (component.type === "currency") {
-        const { code, amount_1000, fallback_value } = component;
-        return {
-          type: "currency",
-          currency: { code, fallback_value, amount_1000 },
-        };
-      }
-
       if (component.type === "date_time") {
         const { fallback_value } = component;
         return {
@@ -220,6 +215,7 @@ export class MessageManager {
         language: {
           code: language,
         },
+        // components: components.map((component) => component.toAPIObject()),
         components,
       },
     });
