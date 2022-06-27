@@ -1,12 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-import {
-  IAuthOptions,
-  IBodyComponents,
-  IButtonComponents,
-  IComponent,
-  IHeaderComponents,
-} from "../@types";
+import { IAuthOptions, IGenericComponent } from "../@types";
 import { IAPIRawButtonsAction, IAPIRawListAction } from "../@types/api";
 import { Client } from "../client/client";
 import { ReplyButton } from "../components/ReplyButton";
@@ -29,37 +23,7 @@ export interface ISendTemplateMessageOptions {
    */
   templateName: string;
 
-  /**
-   * The template components for the body of the message.
-   *
-   * The components will be replaced by the variables in your template.
-   *
-   * Example:
-   * Here's your one time password {{1}} // "1" will be replaced by the component specified
-   * */
-  bodyComponents?: IBodyComponents;
-
-  /**
-   * The template components for the header of the message.
-   *
-   * They'll be replaced by the variables in your template.
-   *
-   * Example:
-   * Thanks for choosing us {{1}}. // "1" will be replaced by the component specified
-   * */
-  headerComponents?: IHeaderComponents;
-
-  /**
-   * The template components for the button of the message.
-   *
-   * They'll be replaced by the variables in your template.
-   *
-   * Example:
-   * Click here to buy {{1}}. // "1" will be replaced by the component specified
-   * */
-  buttonComponents?: IButtonComponents;
-
-  // components: any[]; TODO: work on this later
+  components: IGenericComponent[];
 }
 
 export interface IBaseSendInteractiveMessage {
@@ -157,55 +121,9 @@ export class MessageManager {
   async sendTemplateMessage({
     to,
     templateName,
-    bodyComponents,
-    buttonComponents,
-    headerComponents,
-    // components,
+    components,
     language = "en_US",
   }: ISendTemplateMessageOptions) {
-    const components = [];
-
-    const convertToAPIComponent = (component: IComponent) => {
-      if (component.type === "date_time") {
-        const { fallback_value } = component;
-        return {
-          type: "date_time",
-          date_time: {
-            fallback_value,
-          },
-        };
-      }
-
-      return component;
-    };
-
-    if (bodyComponents) {
-      components.push({
-        type: "body",
-        parameters: bodyComponents.map((component) =>
-          convertToAPIComponent(component)
-        ),
-      });
-    }
-
-    if (buttonComponents) {
-      components.push({
-        type: "button",
-        parameters: buttonComponents.map((component) =>
-          convertToAPIComponent(component)
-        ),
-      });
-    }
-
-    if (headerComponents) {
-      components.push({
-        type: "header",
-        parameters: headerComponents.map((component) =>
-          convertToAPIComponent(component)
-        ),
-      });
-    }
-
     await this.request.post("/messages", {
       messaging_product: "whatsapp",
       to,
@@ -215,8 +133,7 @@ export class MessageManager {
         language: {
           code: language,
         },
-        // components: components.map((component) => component.toAPIObject()),
-        components,
+        components: components.map((component) => component.toAPIObject()),
       },
     });
   }

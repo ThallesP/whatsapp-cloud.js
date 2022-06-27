@@ -66,16 +66,6 @@ export interface IDateTimeComponent {
   fallback_value: Date | string;
 }
 
-export type IComponent =
-  | ITextComponent
-  | ICurrencyComponent
-  | IDateTimeComponent;
-
-export type IBodyComponents =
-  | ITextComponent[]
-  | ICurrencyComponent[]
-  | IDateTimeComponent[];
-
-export type IHeaderComponents = ICurrencyComponent[] | IDateTimeComponent[];
-
-export type IButtonComponents = ICurrencyComponent[] | IDateTimeComponent[];
+export interface IGenericComponent {
+  toAPIObject(): any;
+}

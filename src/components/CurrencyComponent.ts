@@ -1,6 +1,7 @@
+import { IGenericComponent } from "../@types";
 import { CurrencyCodes } from "../utils/CurrencyCodes";
 
-export class CurrencyComponent {
+export class CurrencyComponent implements IGenericComponent {
   amountMultipliedBy1000 = 0;
   fallbackValue = "";
   type: "body" | "header" = "body";

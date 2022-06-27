@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { Client } from "../src";
+import { TextComponent } from "../src/components/TextComponent";
 
 const client = new Client({
   auth: {
@@ -13,11 +14,6 @@ const client = new Client({
   await client.messages.sendTemplateMessage({
     to: process.env.DST_NUMBER || "",
     templateName: "welcome_message",
-    bodyComponents: [
-      {
-        type: "text",
-        text: "Sr. Brega",
-      },
-    ],
+    components: [new TextComponent().setText("Sr. Brega")],
   });
 })();
