@@ -34,4 +34,4 @@ You can find examples at the [examples folder](examples).
 [x] - Ability to send template messages  
 [x] - Ability to send reply buttons  
 [x] - Ability to send sections  
-[] - Ability to send document messages
+[] - Ability to send media messages
